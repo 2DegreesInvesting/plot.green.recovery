@@ -14,7 +14,7 @@ source("plot_summary_col.R")
 data_path <- "/Users/monikafurdyna/Dropbox (2° Investing)/2° Investing Team/1. RESEARCH/1. Studies (projects)/1in1000/03_Content/01_Long-term team/05_Green recovery/Data/Emerging countries/"
 data_file <- "For Monika - Emerging and developing countries.xlsx"
 
-val_divisor <- 10 ^ 3
+val_divisor <- 1
 
 data_power <- data <- readxl::read_excel(
   path = paste0(data_path, data_file),
@@ -50,6 +50,7 @@ p1 <- ggplot(
   scale_y_continuous(
     expand = expansion(mult = c(0, 0.1)),
     limits = c(0, NA),
+    labels = scales::comma,
     n.breaks = 6
   ) +
   scale_colour_one_in1000(labels = c("black", "grey"), name = "Power\n(as of end of year)") +
