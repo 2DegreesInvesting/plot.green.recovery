@@ -14,64 +14,12 @@ source("plot_summary_col.R")
 data_path <- "/Users/monikafurdyna/Dropbox (2° Investing)/2° Investing Team/1. RESEARCH/1. Studies (projects)/1in1000/03_Content/01_Long-term team/05_Green recovery/Data/Emerging countries/"
 data_file <- "For Monika - Emerging and developing countries.xlsx"
 
-val_divisor <- 1
-
-data_power <- data <- readxl::read_excel(
-  path = paste0(data_path, data_file),
-  sheet = "Emerging countries",
-  range = "I2:P4",
-  col_names = TRUE) %>%
-  pivot_longer(
-    cols = c(2, 3, 4, 5, 6, 7, 8),
-    names_to = "year"
-  ) %>%
-  rename(
-    asset_level_timestamp = 1
-  ) %>%
-  mutate(
-    year = as.numeric(year),
-    value = value / val_divisor,
-    asset_level_timestamp = case_when(
-      asset_level_timestamp == "2019Q4" ~ "2019",
-      asset_level_timestamp == "2020Q4" ~ "2020"
-    )
-    ) %>%
-  group_by(year, asset_level_timestamp) %>%
-  drop_na()
-
-p1 <- ggplot(
-  data_power,
-  aes(
-    x = year,
-    y = value,
-    colour = asset_level_timestamp,
-    linetype = asset_level_timestamp
-  )) +
-  geom_line() +
-  scale_y_continuous(
-    expand = expansion(mult = c(0, 0.1)),
-    limits = c(0, NA),
-    labels = scales::comma,
-    n.breaks = 6
-  ) +
-  scale_colour_one_in1000(labels = c("grey", "black"), name = "Power\n(as of end of year)") +
-  scale_linetype_manual(values = c("dashed", "solid"), name = "Power\n(as of end of year)") +
-  theme_green_recovery() %+replace%
-  theme(
-    legend.title = element_text(size = 16)
-  ) +
-  labs(
-    y = "MW",
-    x = ""
-  )
-p1
-
 val_divisor <- 10 ^ 6
 
 data_auto <- data <- readxl::read_excel(
   path = paste0(data_path, data_file),
-  sheet = "Emerging countries",
-  range = "I22:P24",
+  sheet = "EU",
+  range = "G25:N27",
   col_names = TRUE) %>%
   pivot_longer(
     cols = c(2, 3, 4, 5, 6, 7, 8),
@@ -121,8 +69,8 @@ p2
 val_divisor <- 10 ^ 3
 data_oil <- data <- readxl::read_excel(
   path = paste0(data_path, data_file),
-  sheet = "Emerging countries",
-  range = "I39:P41",
+  sheet = "EU",
+  range = "G7:N9",
   col_names = TRUE) %>%
   pivot_longer(
     cols = c(2, 3, 4, 5, 6, 7, 8),
@@ -146,8 +94,8 @@ data_oil <- data <- readxl::read_excel(
 val_divisor <- 10 ^ 9
 data_gas <- data <- readxl::read_excel(
   path = paste0(data_path, data_file),
-  sheet = "Emerging countries",
-  range = "I44:P46",
+  sheet = "EU",
+  range = "G16:N18",
   col_names = TRUE) %>%
   pivot_longer(
     cols = c(2, 3, 4, 5, 6, 7, 8),
