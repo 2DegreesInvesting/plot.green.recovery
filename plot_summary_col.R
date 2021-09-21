@@ -368,3 +368,92 @@ plot_summary_col_st <- function(data, show.strip = TRUE, labels.x = NULL) {
 
   p
 }
+
+plot_summary_col_dummy <- function(data, labels.x = NULL) {
+  font_size <- 6
+
+  data_annotation <- data %>%
+  filter(
+        what_value == "value_bar"
+  ) %>%
+  group_by(category, indicator, what_value, value_type) %>%
+  summarise(value = max(value)) %>%
+  pivot_wider(
+    names_from = value_type,
+    values_from = value
+  ) %>%
+  mutate(
+    percentage = round((after - before) * 100, digits = 0),
+    label = ifelse(
+      percentage > 0,
+      "+",
+      "-"
+    )
+  )
+
+  colour_labels <- find_colour_labels(data)
+  p <- ggplot(
+  data = data,
+  aes(
+    x = value_type,
+    y = value_bar,
+    fill = what_value
+  )) +
+  geom_bar(
+      position = "stack",
+      stat = "identity",
+      width = 0.4
+    ) +
+    scale_fill_one_in1000_val_diff(labels = colour_labels)
+
+
+  p <- p +
+    scale_y_continuous(
+      labels = scales::percent_format(accuracy = 1),
+      expand = expansion(mult = c(0, 0.2))
+    )
+
+  p <- p +
+  geom_segment(
+    data = data_annotation,
+    aes(
+      x = 1.25,
+      xend = 1.75,
+      y = before,
+      yend = after
+    ),
+    arrow = arrow(length = unit(0.3, "cm"))
+  ) +
+  geom_text(
+    data = data_annotation,
+    aes(
+      label = label,
+      x = 1.5,
+      y = min(0, after)
+    ),
+    vjust = - 0.6,
+    hjust = 0.5,
+    family = "EB Garamond",
+    size = font_size,
+    fontface = "bold"
+  ) +
+  theme_green_recovery() +
+  theme(
+    legend.position = "none",
+    axis.title = element_blank()
+  ) +
+  facet_wrap(~indicator, scales = "free_y", ncol = 1, strip.position = "left")
+
+  p <- p +
+      theme(
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        strip.placement = "outside",
+        strip.background = element_blank(),
+        strip.text = element_blank(),
+        plot.margin = unit(c(0.1, 0.1, 0.1, 0.1), "cm")
+      )
+
+  p
+}
+
