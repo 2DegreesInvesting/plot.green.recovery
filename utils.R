@@ -52,7 +52,7 @@ darker.col = function(color, how.much = 30){
 colour_difference_fin <- function(data) {
   if (data$what_value == "diff") {
     if (data$category %in% c("Laggards", "Oil & gas companies")) {
-      if (data$indicator %in% c("returns", "pe")) {
+      if (data$indicator %in% c("returns", "pe", "dummy")) {
         if (data$is_diff_positive) {
           return("diff_red")
         } else {
@@ -66,7 +66,7 @@ colour_difference_fin <- function(data) {
         }
       }
     } else if (data$category == "Leaders") {
-      if (data$indicator %in% c("returns", "pe")) {
+      if (data$indicator %in% c("returns", "pe", "dummy")) {
         if (data$is_diff_positive) {
           return("diff_green")
         } else {
